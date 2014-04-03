@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Knife-switcher v 1.0
+# By Manjot Singh
+# 4/3/2014
+
+ 
+# clear the screen
+tput clear
+ 
+# Move cursor to screen location X,Y (top left is 0,0)
+tput cup 3 15
+ 
+# Set a foreground colour using ANSI escape
+tput setaf 3
+echo "Knife Environments"
+tput sgr0
+ 
+tput cup 5 17
+# Set reverse video mode
+tput rev
+echo "S E L E C T   K N I F E   E N V I R O N M E N T"
+tput sgr0
+
+TML=7
+ML=1
+
+for x in `ls -1 ~/.chef/knife-*.rb`
+	do tput cup $TML 15
+	echo -n "$ML. "
+	echo `basename $x | sed 's/^knife-//;s/.rb$//g'`
+	((ML++))
+	((TML++))
+done
+
+((TML++))
+let ML=$ML-1
+
+# Set bold mode 
+tput bold
+tput cup $TML 15
+read -p "Enter your choice [1-$ML] " choice
+ 
+tput clear
+tput sgr0
+tput rc
+
+clear
+
+if [[ ! $1 =~ ^-[yY]$ ]]
+then
+	echo  
+	read -p 'Overwrite ~/.chef/knife.rb? [y/n] ' -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Exiting."
+	    	exit 0
+	fi
+
+	clear
+fi
+
+SOURCE=`ls -1 ~/.chef/knife-*.rb | awk "NR==$choice"` 
+
+cp $SOURCE ~/.chef/knife.rb
+
+echo
+
+echo -n "Switched to "
+# echo `basename $SOURCE | sed 's/^knife-//;s/.rb$//g'`
+grep chef_server_url ~/.chef/knife.rb
+
+exit 1
