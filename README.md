@@ -1,7 +1,8 @@
 Knife-Switcher
 ==============
 
-An easy way to switch knife.rb configurations for chef
+An easy way to switch knife.rb configurations for chef without knife block, knife sharp, ruby or 
+gems (for the switching). Cygwin compatible.
 
 Installation:
 -------------
